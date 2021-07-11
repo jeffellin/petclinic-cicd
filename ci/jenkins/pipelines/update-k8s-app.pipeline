@@ -1,0 +1,82 @@
+pipeline {
+
+    agent {
+        kubernetes {
+            defaultContainer 'jnlp'
+            yaml """
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+     app.kubernetes.io/name: jenkins-build
+     app.kubernetes.io/component: jenkins-build
+     app.kubernetes.io/version: "1"
+spec:
+  volumes:
+   - name: secret-volume
+     secret:
+       secretName: pks-cicd  
+  hostAliases:
+  - ip: 192.168.1.154
+    hostnames:
+    - "small.pks.ellin.net"
+  - ip: 192.168.1.80
+    hostnames:
+    - "harbor.ellin.net"
+  containers:
+  - name: k8s
+    image: harbor.ellin.net/library/docker-build
+    command:
+    - sleep
+    env:
+      - name: KUBECONFIG
+        value: "/tmp/config/jenkins-sa"
+    volumeMounts:
+    - name: secret-volume
+      readOnly: true
+      mountPath: "/tmp/config"    
+    args:
+    - infinity
+"""
+        }
+    }
+
+    environment {
+        ENV_NAME="${env.ENV_NAME}"
+    }
+
+    stages {
+
+        stage('Update Deployment Manifest'){
+            steps {
+                container('k8s'){
+                    dir("gitops"){
+                        git(
+                            poll: false,
+                            changelog: false,
+                            branch: "${ENV_NAME}",
+                            credentialsId: "git-jenkins",
+                            url: "git@github.com:jeffellin/spring-petclinic-gitops.git"
+                        )
+                    }
+                    sshagent(['git-jenkins']) {   
+                        sh '''#!/bin/sh -xe
+                        
+                        cd gitops/app
+                        printenv
+                        kustomize edit set image ${APP_NAME}=harbor.ellin.net/${REPO_FULL_NAME}@${DIGEST}
+                        git config --global user.name "jenkins CI"
+                        git config --global user.email "none@none.com"
+                        git add .
+                        git diff-index --quiet HEAD || git commit -m "update by ci"
+                        mkdir -p ~/.ssh
+                        ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+                        git pull -r origin ${ENV_NAME}
+                        git push --set-upstream origin ${ENV_NAME}
+                        '''
+                    }
+                }  
+            }
+        }
+    }
+}
