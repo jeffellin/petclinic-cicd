@@ -1,0 +1,121 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  annotations:
+    deprecated.daemonset.template.generation: "4"
+  name: smart-warmer-image-fetcher
+  namespace: build-service
+spec:
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: smart-warmer-image-fetcher
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: smart-warmer-image-fetcher
+    spec:
+      containers:
+      - args:
+        - -mode
+        - sleep
+        command:
+        - /drop/sleeper
+        image: aws-tanzu-harbor-dev.na.lzb.hq/rms-nonprod/build-service/base@sha256:a1565f9c84ae6316069071fbefcf399813513c1722c17d89b690c3d83318d3f4
+        imagePullPolicy: Always
+        name: base
+        resources:
+          limits:
+            cpu: 1m
+            memory: 20M
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /drop
+          name: sleeper
+      - args:
+        - -mode
+        - sleep
+        command:
+        - /drop/sleeper
+        image: aws-tanzu-harbor-dev.na.lzb.hq/rms-nonprod/build-service/default@sha256:a1565f9c84ae6316069071fbefcf399813513c1722c17d89b690c3d83318d3f4
+        imagePullPolicy: Always
+        name: default
+        resources:
+          limits:
+            cpu: 1m
+            memory: 20M
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /drop
+          name: sleeper
+      - args:
+        - -mode
+        - sleep
+        command:
+        - /drop/sleeper
+        image: aws-tanzu-harbor-dev.na.lzb.hq/rms-nonprod/build-service/full@sha256:6ce1f8b5079a229b6aa46b2fda583abe00a58a77e17243b8bf688cf9e8d72ab9
+        imagePullPolicy: Always
+        name: full
+        resources:
+          limits:
+            cpu: 1m
+            memory: 20M
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /drop
+          name: sleeper
+      - args:
+        - -mode
+        - sleep
+        command:
+        - /drop/sleeper
+        image: aws-tanzu-harbor-dev.na.lzb.hq/rms-nonprod/build-service/tiny@sha256:a6c67cbad9f818f9c61a8090b8c30aebf128c66f10ec7d29339d376afc6f2331
+        imagePullPolicy: Always
+        name: tiny
+        resources:
+          limits:
+            cpu: 1m
+            memory: 20M
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /drop
+          name: sleeper
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+      - name: canonical-registry-secret
+      initContainers:
+      - args:
+        - -mode
+        - copy
+        - -to
+        - /drop/sleeper
+        image: aws-tanzu-harbor-dev.na.lzb.hq/rms-nonprod/build-service@sha256:96f409f660fd48fc3d9c040afb2fb49a20ff7fa178fa6f93b5ec5d0f562c5814
+        imagePullPolicy: Always
+        name: sleeper
+        resources:
+          limits:
+            cpu: 1m
+            memory: 20M
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /drop
+          name: sleeper
+      nodeSelector:
+        kubernetes.io/os: linux
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - emptyDir: {}
+        name: sleeper
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 100%
+    type: RollingUpdate
