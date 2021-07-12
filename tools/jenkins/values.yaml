@@ -202,18 +202,20 @@ controller:
 
   # List of plugins to be install during Jenkins controller start
   installPlugins:
-    - kubernetes:1.29.2
-    - workflow-aggregator:2.6
-    - git:4.7.2
-    - git-client:3.7.2
-    - configuration-as-code:1.51
-    - job-dsl:1.77
-    - envinject:2.4.0
-    - ssh-agent:1.22
-    - kubernetes-credentials-provider:0.18-1
-    - github-oauth:0.33
-    - matrix-auth:2.6.6
-    - credentials:2.5
+    - kubernetes
+    - workflow-aggregator
+    - git
+    - git-client
+    - configuration-as-code
+    - job-dsl
+    - envinject
+    - ssh-agent
+    - kubernetes-credentials-provider
+    - github-oauth
+    - matrix-auth
+    - credentials
+    - generic-webhook-trigger
+    - pipeline-utility-steps
     
   # List of plugins to install in addition to those listed in controller.installPlugins
   additionalPlugins: []
