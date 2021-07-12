@@ -12,14 +12,7 @@ metadata:
      app.kubernetes.io/component: jenkins-build
      app.kubernetes.io/version: "1"
 spec:
-  volumes:
-   - name: secret-volume
-     secret:
-       secretName: pks-cicd
   hostAliases:
-  - ip: 192.168.1.154
-    hostnames:
-    - "small.pks.ellin.net"
   - ip: 192.168.1.80
     hostnames:
     - "harbor.ellin.net"
@@ -28,13 +21,6 @@ spec:
     image: harbor.ellin.net/library/docker-build
     command:
     - sleep
-    env:
-      - name: KUBECONFIG
-        value: "/tmp/config/jenkins-sa"
-    volumeMounts:
-    - name: secret-volume
-      readOnly: true
-      mountPath: "/tmp/config"
     args:
     - infinity
 """
