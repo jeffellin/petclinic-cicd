@@ -57,7 +57,7 @@ spec:
                             poll: true,
                             changelog: true,
                             branch: "${ENV_NAME}",
-                            credentialsId: "git-jenkins",
+                            credentialsId: "git",
                             url: "git@github.com:jeffellin/spring-petclinic-gitops.git"
                         )
                         script{
