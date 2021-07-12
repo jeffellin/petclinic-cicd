@@ -9,9 +9,9 @@ def apps = [
         buildPipeline: 'ci/jenkins/pipelines/update-k8s-app.pipeline',
         token: 'stage-rebuild'
     ],
-    'master': [
+    'prod': [
         buildPipeline: 'ci/jenkins/pipelines/update-k8s-app.pipeline',
-        token: 'dev-rebuild'
+        token: 'prod-rebuild'
     ]
 ]
 
