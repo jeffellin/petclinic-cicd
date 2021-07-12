@@ -16,13 +16,6 @@ spec:
    - name: secret-volume
      secret:
        secretName: pks-cicd  
-  hostAliases:
-  - ip: 192.168.1.154
-    hostnames:
-    - "small.pks.ellin.net"
-  - ip: 192.168.1.80
-    hostnames:
-    - "harbor.ellin.net"
   containers:
   - name: k8s
     image: harbor.ellin.net/library/docker-build
@@ -55,11 +48,11 @@ spec:
                             poll: false,
                             changelog: false,
                             branch: "${ENV_NAME}",
-                            credentialsId: "git-jenkins",
+                            credentialsId: "git",
                             url: "git@github.com:jeffellin/spring-petclinic-gitops.git"
                         )
                     }
-                    sshagent(['git-jenkins']) {   
+                    sshagent(['git']) {   
                         sh '''#!/bin/sh -xe
                         
                         cd gitops/app
