@@ -1,3 +1,6 @@
+/* 
+Generate TBS images for every commit identified in the gitops repo for the branch identified below.
+*/
 def env = [
     'stage': [
         buildPipeline: 'ci/jenkins/pipelines/tbs-update-env.pipeline'
