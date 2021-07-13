@@ -1,3 +1,10 @@
+/** This pipeline will build the application and push the completed artifact
+  * To the registry.  To add another app simply define the app name and add 
+  * a path to the build pipeline.  The spring-boot pipeline should be 
+  * sufficient to use the TBS for most cases Jenkins will poll this
+  * repo for changes every minute
+  */
+
 def apps = [
     'spring-petclinic-vets-service': [
         buildPipeline: 'ci/jenkins/pipelines/spring-boot-app.pipeline'
