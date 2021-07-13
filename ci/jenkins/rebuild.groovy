@@ -2,7 +2,10 @@
 This seed job will install a pipeline to update an env based on pushes
 to the harbor repo.  A webhook needs to be configured in harbor to call jenkins
 when a new container is pushed. This will occur when a rebuild is triggered do to
-a buildpack update
+a buildpack update.
+
+The token is what should be sent by the jenkins generic webhook trigger to create a new
+build which will update kustomize in that environment.
 */
 def apps = [
     'stage': [
