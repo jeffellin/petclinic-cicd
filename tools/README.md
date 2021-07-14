@@ -8,9 +8,12 @@ kubectl create ns cicd
 
 helm install jenkins . -n cicd
 
+kubectl patch svc jenkins -n cicd -p '{"spec": {"type": "LoadBalancer"}}'
+
+
 kubectl exec --namespace cicd -it svc/jenkins -c jenkins -- /bin/cat /run/secrets/chart-admin-password && echo
 
-    QIjzTw7xFlkLHBkx6TcazD
+    QPDRYPe9lIlZUaQoa9XVY8
 
 Create an ssh secret called `ssh` for github
 
