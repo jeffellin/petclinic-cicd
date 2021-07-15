@@ -16,7 +16,6 @@ spec:
     image: reg.ellin.net/library/docker-build
     command:
     - sleep
-    volumeMounts:
     args:
     - infinity
 """
