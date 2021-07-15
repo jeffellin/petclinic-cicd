@@ -15,15 +15,15 @@ spec:
   volumes:
    - name: secret-volume
      secret:
-       secretName: pks-cicd  
+       secretName: jenkins-sa
   containers:
   - name: k8s
-    image: harbor.ellin.net/library/docker-build
+    image: reg.ellin.net/library/docker-build
     command:
     - sleep
     env:
       - name: KUBECONFIG
-        value: "/tmp/config/kubeconfig"
+        value: "/tmp/config/kpack-deploy-sa"    
     volumeMounts:
     - name: secret-volume
       readOnly: true
@@ -70,7 +70,7 @@ def create_images(list) {
                     printenv
                     kp image save ${list[i].name}-${ENV_NAME} \
                         --git git@github.com:jeffellin/${list[i].name}.git \
-                        -t harbor.ellin.net/${ENV_NAME}/${list[i].name} \
+                        -t reg.ellin.net/${ENV_NAME}/${list[i].name} \
                         --env BP_GRADLE_BUILD_ARGUMENTS='--no-daemon build' \
                         --git-revision ${list[i].commit} -w
                 """
