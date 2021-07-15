@@ -61,7 +61,7 @@ spec:
                         export GIT_COMMIT=$(cat app/git-commit.txt)
                         kp image save ${APP_NAME} \
                             --git git@github.com:jeffellin/${APP_NAME}.git \
-                            -t harbor.ellin.net/dev/${APP_NAME} \
+                            -t reg.ellin.net/dev/${APP_NAME} \
                             --env BP_GRADLE_BUILD_ARGUMENTS='--no-daemon build' \
                             --git-revision ${GIT_COMMIT} -w
                     '''
