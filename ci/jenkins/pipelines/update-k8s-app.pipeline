@@ -15,15 +15,15 @@ spec:
   volumes:
    - name: secret-volume
      secret:
-       secretName: pks-cicd  
+       secretName: jenkins-sa
   containers:
   - name: k8s
-    image: harbor.ellin.net/library/docker-build
+    image: reg.ellin.net/library/docker-build
     command:
     - sleep
     env:
       - name: KUBECONFIG
-        value: "/tmp/config/jenkins-sa"
+        value: "/tmp/config/kpack-deploy-sa"    
     volumeMounts:
     - name: secret-volume
       readOnly: true
@@ -57,7 +57,7 @@ spec:
                         
                         cd gitops/app
                         printenv
-                        kustomize edit set image ${APP_NAME}=harbor.ellin.net/${REPO_FULL_NAME}@${DIGEST}
+                        kustomize edit set image ${APP_NAME}=reg.ellin.net/${REPO_FULL_NAME}@${DIGEST}
                         git config --global user.name "jenkins CI"
                         git config --global user.email "none@none.com"
                         git add .
