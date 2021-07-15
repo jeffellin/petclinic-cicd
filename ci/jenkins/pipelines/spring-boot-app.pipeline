@@ -11,11 +11,22 @@ metadata:
      app.kubernetes.io/component: jenkins-build
      app.kubernetes.io/version: "1"
 spec:
+  volumes:
+   - name: secret-volume
+     secret:
+       secretName: jenkins-sa
   containers:
   - name: k8s
     image: reg.ellin.net/library/docker-build
     command:
     - sleep
+    env:
+      - name: KUBECONFIG
+        value: "/tmp/config/kpack-deploy-sa"    
+    volumeMounts:
+    - name: secret-volume
+      readOnly: true
+      mountPath: "/tmp/config"    
     args:
     - infinity
 """
