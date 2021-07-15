@@ -2,7 +2,6 @@ pipeline {
 
     agent {
         kubernetes {
-            defaultContainer 'jnlp'
             yaml """
 apiVersion: v1
 kind: Pod
@@ -14,7 +13,7 @@ metadata:
 spec:
   containers:
   - name: k8s
-    image: harbor.ellin.net/library/docker-build
+    image: reg.ellin.net/library/docker-build
     command:
     - sleep
     volumeMounts:
