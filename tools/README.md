@@ -4,16 +4,35 @@ Assumptions,
 2. Extenral LBs work
 
 
+(⎈ |playground:default)jeff@ubuntu-1:~/tbs$ kbld relocate -f images.lock --lock-output images-relocated.lock --repository reg.ellin.net/build-service/build-service
+
+ytt -f values.yaml \
+    -f manifests/ \
+    -f /home/jeff/certs/mkcert_development_CA_146457396271771716678352258984121938072.pem \
+    -v docker_repository="reg.ellin.net/build-service/build-service" \
+    -v docker_username="admin>" \
+    -v docker_password="Admin12345" \
+    | kbld -f images-relocated.lock -f- \
+    | kapp deploy -a tanzu-build-service -f- -y
+
+    ytt -f /tmp/bundle/values.yaml \
+      -f /tmp/bundle/config/ \
+      -f /home/jeff/certs/mkcert_development_CA_146457396271771716678352258984121938072.pem \
+      -v docker_repository="reg.ellin.net/build-service/build-service" \
+      -v docker_username="admin" \
+      -v docker_password="Admin12345" \
+      | kbld -f /tmp/bundle/.imgpkg/images.yml -f- \
+      | kapp deploy -a tanzu-build-service -f- -y
+
 kubectl create ns cicd
 
 helm install jenkins . -n cicd
 
-kubectl patch svc jenkins -n cicd -p '{"spec": {"type": "LoadBalancer"}}'
-
+k
 
 kubectl exec --namespace cicd -it svc/jenkins -c jenkins -- /bin/cat /run/secrets/chart-admin-password && echo
 
-    QPDRYPe9lIlZUaQoa9XVY8
+    FpL0qeEsDs
 
 Create an ssh secret called `ssh` for github
 
