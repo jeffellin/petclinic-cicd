@@ -1,4 +1,4 @@
-FROM aws-tanzu-harbor-dev.na.lzb.hq/rms-nonprod/docker-harbor
+FROM docker:dind
 
 ENV KUBE_VERSION 1.20.4
 ENV HELM_VERSION 3.5.3
